@@ -1,0 +1,22 @@
+#pragma once
+#ifndef ENUMS_H
+#define ENUMS_H
+
+#ifndef AUDIO_BLOCK_SAMPLES
+#define AUDIO_BLOCK_SAMPLES 64//128
+#endif
+
+#define AUDIO_BUFFER_SAMPLES AUDIO_BLOCK_SAMPLES
+#define BLOCK_SIZE (AUDIO_BUFFER_SAMPLES * 2) // stereo interleaved
+
+#ifndef AUDIO_SAMPLE_RATE
+#define AUDIO_SAMPLE_RATE 16000//44100
+#endif
+
+#define SAMPLE_FREQ AUDIO_SAMPLE_RATE
+
+#ifndef AUDIO_SAMPLE_RATE_EXACT
+#define AUDIO_SAMPLE_RATE_EXACT 16000.0f//44100  
+#endif
+
+#endif // ENUMS_H

@@ -1,24 +1,29 @@
-#include "arm_math/src/arm_math.h"
 #include <Arduino.h>
 #include "utility/dspinst.h"
 #include "AudioStream.h"
-#include "AudioOutputI2S.h"
 
-#include "analyze_fft256.h" // FFT lib doesn't seem to work on Pico 2 - requires M4 core?
-#include "analyze_fft1024.h"
+#ifdef AIC3204
+#include "codec/AIC3204/AudioOutputI2S.h"
+#include "codec/AIC3204/AudioInputI2S.h"
+#include "codec/AIC3204/I2SBridge.h"
+#endif
+
+#ifdef PCM5102
+#include "codec/PCM5102/AudioOutputI2S.h"
+#endif
+
 #include "analyze_print.h"
 #include "analyze_tonedetect.h"
 #include "analyze_notefreq.h"
 #include "analyze_peak.h"
 #include "analyze_rms.h"
-
 #include "effect_bitcrusher.h"
 #include "effect_chorus.h"
-#include "effect_multiply.h"
-#include "effect_delay.h"
-#include "effect_envelope.h"
 #include "effect_fade.h"
 #include "effect_flange.h"
+#include "effect_envelope.h"
+#include "effect_multiply.h"
+#include "effect_delay.h"
 #include "effect_midside.h"
 #include "effect_reverb.h"
 #include "effect_freeverb.h"
@@ -27,19 +32,13 @@
 #include "effect_combine.h"
 #include "effect_rectifier.h"
 #include "effect_wavefolder.h"
-#include "effect_daisysp.h"
-//#include "effect_2in_daisysp.h"
-
 #include "filter_biquad.h"
 #include "filter_fir.h"
-#include "filter_ladder.h"
 #include "filter_variable.h"
-
+#include "filter_ladder.h"
 #include "mixer.h"
-
 #include "play_memory.h"
 #include "play_queue.h"
-
 #include "synth_tonesweep.h"
 #include "synth_sine.h"
 #include "synth_waveform.h"
@@ -48,8 +47,5 @@
 #include "synth_pinknoise.h"
 #include "synth_karplusstrong.h"
 #include "synth_simple_drum.h"
-#include "synth_wavetable.h"
 #include "synth_pwm.h"
 #include "synth_wavetable.h"
-#include "synth_daisysp.h"
-
