@@ -25,7 +25,7 @@ Known Issues:
 
 Sometimes memory usage reports wildly wrong numbers
 
-# New Features:
+## New Features:
     - Multi codec feature
     - Input and Output
     - Codec examples
@@ -36,6 +36,6 @@ Sometimes memory usage reports wildly wrong numbers
     - arm_common_tables.c
     - arm_dct4_init_f32.c
 
-# TODO:
+## TODO:
     - Move all codec files into /src/codec
     - analyze_fft256
