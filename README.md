@@ -25,13 +25,16 @@ Known Issues:
 
 Sometimes memory usage reports wildly wrong numbers
 
-# Notes:
+# New Features:
+    - Multi codec feature
+    - Input and Output
+    - Codec examples
 
-- ## Some Teensy components are hardcoded to 44100.0f (wont work with 16000.0f) 
-    - src/play_memory.cpp
-    - examples/SamplePlayer/AudioSampleHihat.cpp
-    - src/arm_math/src/arm_common_tables.c
-    - src/arm_math/src/arm_dct4_init_f32.c
+* Some Teensy components are hardcoded to 44100.0f (won't work with 16000.0f) 
+    - play_memory.cpp
+    - AudioSampleHihat.cpp
+    - arm_common_tables.c
+    - arm_dct4_init_f32.c
 
 # TODO:
     - Move all codec files into /src/codec
