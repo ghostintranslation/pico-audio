@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "ostream": "cpp",
-        "print": "cpp"
+        "print": "cpp",
+        "cstdint": "cpp",
+        "audiostream.h": "c",
+        "stdlib.h": "c",
+        "enums.h": "c"
     }
 }

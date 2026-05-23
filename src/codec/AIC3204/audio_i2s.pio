@@ -1,0 +1,66 @@
+// clang-format off
+; I2S audio PIO program, modified from the Pico SDK example:
+;   - LRCLK and BCLK are swapped
+;   - Init takes separate data_in_pin and data_out_pin
+;
+; 16 bits per sample, stereo. Autopull enabled, threshold 32, shift left.
+; FIFO word format:
+;
+; | 31   :   16 | 15   :    0 |
+; | sample ws=0 | sample ws=1 |
+;
+; Side-set: bit 0 = BCLK, bit 1 = LRCLK
+; Send 16-bit words for mono, 32-bit for stereo
+
+.program audio_i2s
+.side_set 2
+
+                    ;        /--- BCLK (Swapped from RPI!)
+                    ;        |/-- LRCLK (Swapped from RPI!)
+bitloop1:           ;        ||
+    out pins, 1       side 0b01
+    nop               side 0b01
+    in pins, 1        side 0b11
+    jmp x-- bitloop1  side 0b11
+    out pins, 1       side 0b00
+    nop               side 0b00
+    in pins, 1        side 0b10
+    set x, 14         side 0b10
+
+bitloop0:
+    out pins, 1       side 0b00
+    nop               side 0b00
+    in pins, 1        side 0b10
+    jmp x-- bitloop0  side 0b10
+    out pins, 1       side 0b01
+    nop               side 0b01
+    in pins, 1        side 0b11
+public entry_point:
+    set x, 14         side 0b11
+
+
+% c-sdk {
+  // clang-format on
+  static inline void audio_i2s_program_init(PIO pio, uint sm, uint offset, uint data_in_pin, uint data_out_pin,
+                                            uint clock_pin_base) {
+    pio_sm_config sm_config = audio_i2s_program_get_default_config(offset);
+
+    sm_config_set_out_pins(&sm_config, data_out_pin, 1);
+    sm_config_set_in_pins(&sm_config, data_in_pin);
+    sm_config_set_sideset_pins(&sm_config, clock_pin_base);
+    sm_config_set_out_shift(&sm_config, false, true, 32);
+    sm_config_set_in_shift(&sm_config, false, true, 32);
+
+    pio_sm_init(pio, sm, offset, &sm_config);
+
+    uint pin_dirs = (0u << data_in_pin) | (1u << data_out_pin) | (3u << clock_pin_base);
+    uint pin_mask = (1u << data_in_pin) | (1u << data_out_pin) | (3u << clock_pin_base);
+    pio_sm_set_pindirs_with_mask(pio, sm, pin_dirs, pin_mask);
+    pio_sm_set_pins(pio, sm, 0); // clear pins
+
+    hw_set_bits(&pio->input_sync_bypass, 1 << (data_in_pin));
+
+    pio_sm_exec(pio, sm, pio_encode_jmp(offset + audio_i2s_offset_entry_point));
+  }
+  // clang-format off
+%}
