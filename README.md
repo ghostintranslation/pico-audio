@@ -21,7 +21,8 @@ Tested with Raspberry Pi Pico 2 board, Arduino IDE 2.3.6 with Pico Arduino 4.5.3
 
 To run the PolySynth example, select the Pico 2 board and USB stack Adafruit TinyUSB. Ladderfilter example may require overclocking. Most of the original Teensy Audio examples will run with minor modifications.
 
-Known Issues:
+Known Issues & Fixes:
 
-Sometimes memory usage reports wildly wrong numbers
-
+- Memory tracking & corruption bug (wild memory usage numbers from NULL release and double-free underflow) has been fixed.
+- Multi-core safe memory management and interrupt nesting are now supported via RP2350 hardware spinlocks.
+- ARMv8-M DSP instructions and hardware FPU are now enabled across all audio filter, synth, and analysis blocks.

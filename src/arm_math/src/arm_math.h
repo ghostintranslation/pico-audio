@@ -256,14 +256,25 @@
 #ifndef _ARM_MATH_H
 #define _ARM_MATH_H
 
-// Teensy 3.0
+#if defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wnarrowing"
+#endif
+
 #include <stdint.h>
 #define __ASM		__asm
 #define __INLINE	inline
 #define __STATIC_INLINE	static inline
 #define __CORTEX_M	4
+
+#if defined(__ARM_FP) && (__ARM_FP > 0)
+#define __FPU_USED	1
+#else
 #define __FPU_USED	0
+#endif
+
+#ifndef ARM_MATH_CM4
 #define ARM_MATH_CM4
+#endif
 #include "core_cmInstr.h"
 #include "core_cm4_simd.h"
 
