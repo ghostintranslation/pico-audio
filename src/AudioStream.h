@@ -37,14 +37,39 @@
 
 #endif
 
-#if defined(ARDUINO_RASPBERRY_PI_PICO_2) || defined(ARDUINO_RASPBERRY_PI_PICO_2W)
-#define __IMXRT1062__  // pretend this is a Teensy 4.x
+#if (defined(PICO_RP2350) || defined(__RP2350__) || defined(ARDUINO_RASPBERRY_PI_PICO_2) || defined(ARDUINO_RASPBERRY_PI_PICO_2W)) && !defined(__riscv)
+// Pretend Teensy 4.x for board-level features
+#ifndef __IMXRT1062__
+#define __IMXRT1062__
+#endif
+
+// Cortex-M33 on RP2350 has DSP extensions compatible with ARMv7E-M DSP instructions.
+// Defining __ARM_ARCH_7EM__ enables hardware-accelerated DSP paths across Teensy audio modules.
+#ifndef __ARM_ARCH_7EM__
+#define __ARM_ARCH_7EM__
+#endif
+
+// Enable Cortex-M4/M33 SIMD intrinsics in CMSIS-DSP
+#ifndef ARM_MATH_CM4
+#define ARM_MATH_CM4
+#endif
+
+#ifndef FLASHMEM
 #define FLASHMEM
+#endif
+
 #define ARM_DWT_CYCCNT (m33_hw->dwt_cyccnt)
-#define __disable_irq(...) noInterrupts()
-#define __enable_irq(...)    interrupts()
 #define F_CPU_ACTUAL (rp2040.f_cpu())
-#endif // defined(ARDUINO_RASPBERRY_PI_PICO_2)
+
+// Multi-core and interrupt-nesting safe critical section functions
+extern "C" {
+void audio_enter_critical(void);
+void audio_exit_critical(void);
+}
+
+#define __disable_irq(...) audio_enter_critical()
+#define __enable_irq(...)  audio_exit_critical()
+#endif // RP2350 ARM
 
 
 // AUDIO_BLOCK_SAMPLES determines how many samples the audio library processes

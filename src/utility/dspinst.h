@@ -27,6 +27,10 @@
 #ifndef dspinst_h_
 #define dspinst_h_
 
+#if defined(__riscv)
+#error "pico-audio requires RP2350 ARM Cortex-M33 architecture. RISC-V hazard3 mode is not supported because ARM DSP SIMD instructions are used."
+#endif
+
 #include <stdint.h>
 
 // computes limit((val >> rshift), 2**bits)

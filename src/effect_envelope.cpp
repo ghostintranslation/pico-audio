@@ -38,8 +38,7 @@
 
 void AudioEffectEnvelope::noteOn(void)
 {
-//	__disable_irq();
-	noInterrupts();
+	__disable_irq();
 	if (state == STATE_IDLE || state == STATE_DELAY || release_forced_count == 0) {
 		mult_hires = 0;
 		count = delay_count;

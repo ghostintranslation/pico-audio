@@ -26,7 +26,7 @@ inline SynthVoice::SynthVoice() {
   this->envelope->attack(5);
   // this->envelope->decay(2000);
   this->envelope->sustain(1);
-  this->envelope->release(2000);
+  this->envelope->release(4000);
 
   new AudioConnection(*this->sine, 0, *this->envelope, 0);
 }
